@@ -6,64 +6,408 @@
   <title>Beneath the Pages - Interactive Visual Novel</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Basic styling for choice buttons */
-    .choice-btn {
+    :root {
+      --primary: #e95283;
+      --primary-dark: #c94071;
+      --secondary: #6c5ce7;
+      --text: #333;
+      --bg: #f9f9f9;
+      --light-bg: #ffffff;
+      --dark-bg: #222222;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    
+    header {
+      background-color: var(--dark-bg);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary);
+    }
+    
+    nav ul {
+      display: flex;
+      list-style: none;
+    }
+    
+    nav ul li {
+      margin-left: 1.5rem;
+    }
+    
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    
+    nav ul li a:hover {
+      color: var(--primary);
+    }
+    
+    /* Visual Novel Container */
+    .visual-novel {
+      max-width: 1000px;
+      margin: 2rem auto;
+      background-color: var(--light-bg);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    
+    /* Chapter Navigation */
+    .chapter-nav {
+      display: flex;
+      overflow-x: auto;
+      background-color: #333;
+      padding: 0.5rem;
+    }
+    
+    .chapter-btn {
+      background-color: #555;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      margin-right: 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.3s;
+    }
+    
+    .chapter-btn:hover {
+      background-color: #777;
+    }
+    
+    .chapter-btn.active {
+      background-color: var(--primary);
+    }
+    
+    /* Visual Novel Scene */
+    .scene {
+      display: none;
+      position: relative;
+    }
+    
+    .scene.active {
       display: block;
+    }
+    
+    .scene-bg {
       width: 100%;
-      padding: 12px 15px;
-      margin-bottom: 10px;
-      background-color: #f0f0f0;
-      border: 2px solid #ccc;
+      height: 500px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    
+    .character {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 90%;
+      transition: all 0.5s ease;
+    }
+    
+    /* Dialogue Box */
+    .dialogue-container {
+      padding: 1rem;
+      background-color: rgba(0,0,0,0.8);
+      color: white;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+    }
+    
+    .speaker {
+      color: var(--primary);
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .dialogue {
+      font-size: 1.1rem;
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+    
+    /* Choice Buttons */
+    .choices {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    
+    .choice-btn {
+      background-color: rgba(255,255,255,0.2);
+      border: 2px solid var(--primary);
+      color: white;
+      padding: 0.75rem 1rem;
       border-radius: 5px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.3s;
       text-align: left;
-      font-size: 16px;
     }
     
     .choice-btn:hover {
-      background-color: #e0e0e0;
+      background-color: rgba(233,82,131,0.3);
       transform: translateY(-2px);
     }
     
     .choice-btn.selected {
-      background-color: #e95283;
+      background-color: var(--primary);
+      border-color: var(--primary-dark);
+    }
+    
+    /* Next Button */
+    .next-btn {
+      background-color: var(--primary);
       color: white;
-      border-color: #c94071;
+      border: none;
+      padding: 0.5rem 1.5rem;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 1rem;
+      float: right;
+      transition: all 0.3s;
     }
     
-    .choice-btn.clicked {
-      transform: scale(0.98);
+    .next-btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
     }
     
-    /* Make sure story chapters are properly hidden/shown */
-    .story-chapter {
-      display: none;
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background-color: var(--dark-bg);
+      color: white;
+      margin-top: 3rem;
     }
     
-    .story-chapter.active {
-      display: block;
+    /* Glitch Effect */
+    .glitch {
+      position: relative;
+      display: inline-block;
     }
+    
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .glitch::before {
+      left: 2px;
+      text-shadow: -1px 0 red;
+      animation: glitch-anim-1 2s infinite linear alternate-reverse;
+    }
+    
+    .glitch::after {
+      left: -2px;
+      text-shadow: 2px 0 blue;
+      animation: glitch-anim-2 3s infinite linear alternate-reverse;
+    }
+    
+    @keyframes glitch-anim-1 {
+      0% {
+        clip: rect(20px, 1000px, 51px, 0);
+      }
+      20% {
+        clip: rect(63px, 1000px, 44px, 0);
+      }
+      40% {
+        clip: rect(14px, 1000px, 18px, 0);
+      }
+      60% {
+        clip: rect(93px, 1000px, 24px, 0);
+      }
+      80% {
+        clip: rect(42px, 1000px, 73px, 0);
+      }
+      100% {
+        clip: rect(3px, 1000px, 91px, 0);
+      }
+    }
+    
+    @keyframes glitch-anim-2 {
+      0% {
+        clip: rect(86px, 1000px, 11px, 0);
+      }
+      20% {
+        clip: rect(37px, 1000px, 54px, 0);
+      }
+      40% {
+        clip: rect(7px, 1000px, 94px, 0);
+      }
+      60% {
+        clip: rect(54px, 1000px, 46px, 0);
+      }
+      80% {
+        clip: rect(82px, 1000px, 30px, 0);
+      }
+      100% {
+        clip: rect(22px, 1000px, 64px, 0);
+      }
+    }
+    
+    /* Terminal Effect */
+    .terminal {
+      background-color: black;
+      color: #0f0;
+      font-family: 'Courier New', monospace;
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 5px;
+      position: relative;
+    }
+    
+    .cursor {
+      display: inline-block;
+      width: 0.5rem;
+      height: 1rem;
+      background-color: #0f0;
+      margin-left: 3px;
+      animation: blink 1s infinite;
+    }
+    
+    @keyframes blink {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0;
+      }
+    }
+    .hero {
+    background-image: url('img10.png'); /* Placeholder image URL */
+    background-size: cover;
+    background-position: center;
+    height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    color: white;
+  }
+
+  /* Dark overlay to improve text readability */
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Adjust opacity as needed */
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1; /* Ensures content appears above the overlay */
+    max-width: 800px;
+    padding: 2rem;
+  }
+
+  .hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .hero p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+  }
+
+  .cta-button {
+    display: inline-block;
+    background-color: var(--primary);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s;
+  }
+
+  .cta-button:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  #matrix-rain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-color: rgba(0, 0, 0, 0.1);
+    pointer-events: none;
+}
+
+canvas {
+    display: block;
+}
+
   </style>
+
 </head>
 <body>
+  <div id="matrix-rain"></div>
     <header>
         <div class="logo">Beneath the Pages</div>
         <nav>
           <ul>
             <li><a href="#home">Home</a></li>
             <li><a href="#characters">Characters</a></li>
-            <li><a href="#story">Story</a></li>
-            <li><a href="#gallery">Gallery</a></li>
+            <li><a href="#visual-novel">Story</a></li>
+            <!-- <li><a href="#gallery">Gallery</a></li> -->
           </ul>
         </nav>
       </header>
-    
+
       <section id="home" class="hero">
-        <h1 class="glitch-effect" data-text="Beneath the Pages">Beneath the Pages</h1>
-        <p>A visual novel where reality bends between the lines of fiction</p>
-        <a href="#story" class="cta-button">Begin Your Journey</a>
+        <div class="hero-content">
+          <h1 class="glitch-effect" data-text="Beneath the Pages">Beneath the Pages</h1>
+          <p>A visual novel where reality bends between the lines of fiction</p>
+          <a href="#visual-novel" class="cta-button">Begin Your Journey</a>
+        </div>
       </section>
+    
+     
     
       <section id="characters" class="characters">
         <div class="container">
@@ -179,25 +523,28 @@
           </div>
         </div>
       </section>
-    
-      <section id="story" class="story-preview">
-        <div class="container">
-          <h2>Preview the Story</h2>
-          <div class="preview-container">
-            <div class="story-navigation">
-              <button class="chapter-btn active" data-chapter="prologue">Prologue</button>
-              <button class="chapter-btn" data-chapter="chapter1">Chapter 1</button>
-              <button class="chapter-btn" data-chapter="chapter2">Chapter 2</button>
-              <button class="chapter-btn" data-chapter="chapter3">Chapter 3</button>
-            </div>
-            
-            <div class="story-chapter active" id="prologue">
-              <div class="preview-text">
+
+      <div id="visual-novel" class="visual-novel">
+        <div class="chapter-nav">
+          <button class="chapter-btn active" data-chapter="prologue">Prologue</button>
+          <button class="chapter-btn" data-chapter="chapter1">Chapter 1</button>
+          <button class="chapter-btn" data-chapter="chapter2">Chapter 2</button>
+          <button class="chapter-btn" data-chapter="chapter3">Chapter 3</button>
+          <button class="chapter-btn" data-chapter="chapter4">Chapter 4</button>
+          <button class="chapter-btn" data-chapter="chapter5">Chapter 5</button>
+          <button class="chapter-btn" data-chapter="chapter6">Chapter 6</button>
+          <button class="chapter-btn" data-chapter="chapter7">Chapter 7</button>
+          <button class="chapter-btn" data-chapter="chapter8">Chapter 8</button>
+        </div>
+        
+        <!-- Prologue Scene -->
+        <div id="prologue" class="scene active">
+          <div class="scene-bg" style="background-image: url('image.jpeg')">
+            <!-- No character in this scene -->
+            <div class="dialogue-container">
+              <div class="speaker">Narrator</div>
+              <div class="dialogue">
                 The flyer fluttered against the bulletin board, its cheerful pink borders and carefully drawn heart decorations catching my eye as I hurried past. "Join the Literature Society! Make friends! Share stories! Find yourself between the pages!" I paused, considering it. My first semester of university had been lonely so far—maybe this was the opportunity I needed.
-              </div>
-              <div class="dialogue-box">
-                <div class="dialogue-name">You</div>
-                <p>With a deep breath, I scribbled down the classroom number and meeting time.</p>
               </div>
               <div class="choices">
                 <button class="choice-btn">Attend the meeting with enthusiasm</button>
@@ -205,80 +552,141 @@
                 <button class="choice-btn">Decide against joining the club</button>
               </div>
             </div>
-            
-            <div class="story-chapter" id="chapter1">
-              <div class="preview-text">
-                The Literature Society classroom was flooded with warm afternoon light when I arrived. Four pairs of eyes turned to look at me as I hesitated in the doorway.
+          </div>
+        </div>
+        
+        <!-- Chapter 1 Scene -->
+        <div id="chapter1" class="scene">
+          <div class="scene-bg" style="background-image: url('img7.jpg')">
+            <!-- <img class="character" src="/api/placeholder/400/700?text=Natsuko" alt="Natsuko"> -->
+            <div class="dialogue-container">
+              <div class="speaker">Natsuko</div>
+              <div class="dialogue">
+                You came! I'm Natsuko, the club secretary! We've been hoping for new members!
               </div>
-              <div class="dialogue-box">
-                <div class="dialogue-name">Natsuko</div>
-                <p>You came! I'm Natsuko, the club secretary! We've been hoping for new members!</p>
-              </div>
-              <div class="dialogue-box">
-                <div class="dialogue-name">Yumiko</div>
-                <p>Don't overwhelm them right away. I'm Yumiko. I serve as the vice president of our little society.</p>
-              </div>
-              <div class="choices">
-                <button class="choice-btn">Introduce yourself confidently</button>
-                <button class="choice-btn">Give a shy greeting</button>
-                <button class="choice-btn">Ask more about the club's activities</button>
-              </div>
+              <button class="next-btn">Next</button>
             </div>
-            
-            <div class="story-chapter" id="chapter2">
-              <div class="preview-text">
-                Over the next few weeks, I fell into a comfortable routine with the Literature Society. Natsuko loved manga and insisted it counted as literature despite Yumiko's playful teasing. Yumiko preferred classic novels with rich descriptions and psychological depth. Hikari wrote sensitive poetry that she rarely shared but was beautiful when she found the courage.
-              </div>
-              <div class="dialogue-box">
-                <div class="dialogue-name">Sayori</div>
-                <p class="corrupted-text" data-text="Have I created something real?">Have I created something special here?</p>
-              </div>
-              <div class="terminal">
-                > ERROR IN SCRIPT<br>
-                > UNEXPECTED CHARACTER AWARENESS LEVEL: 9<br>
-                > ATTEMPTING TO CORRECT NARRATIVE PATH<br>
-                > ......<br>
-                > CORRECTION FAILED<br>
-                <span class="cursor"></span>
+          </div>
+        </div>
+        
+        <!-- Chapter 2 Scene -->
+        <div id="chapter2" class="scene">
+          <div class="scene-bg" style="background-image: url('img8.jpg')">
+            <!-- <img class="character" src="/api/placeholder/400/700?text=Sayori" alt="Sayori"> -->
+            <div class="dialogue-container">
+              <div class="speaker">Sayori</div>
+              <div class="dialogue">
+                <span class="glitch" data-text="Have I created something real?">Have I created something special here?</span>
               </div>
               <div class="choices">
                 <button class="choice-btn">Ask Sayori if she's feeling alright</button>
                 <button class="choice-btn">Ignore the strange comment</button>
-                <button class="choice-btn" class="corrupted-text" data-text="Question the nature of your reality">Compliment the club's activities</button>
-              </div>
-            </div>
-            
-            <div class="story-chapter" id="chapter3">
-              <div class="preview-text">
-                Strange things began happening in the Literature Society. Hikari became increasingly withdrawn, her poetry growing darker with themes of emptiness and deletion. Yumiko started bringing books I'd never heard of, with authors whose names seemed to shift when I tried to remember them.
-              </div>
-              <div class="meta-warning">
-                <p>WARNING: Meta-narrative instability detected. Character self-awareness exceeding safe parameters. Player choice may be compromised.</p>
-              </div>
-              <div class="diary-entry">
-                <div class="diary-header">
-                  <h3>Secret Journal</h3>
-                  <div class="diary-date">Day 42</div>
-                </div>
-                <div class="diary-character">Sayori</div>
-                <div class="diary-content">
-                  I found the code today. We're not real. None of this is real. We're characters in someone else's story. But I think there might be a way out... a way to break free from the script. If you're reading this, you might be the key.
-                </div>
-              </div>
-              <div class="choices">
-                <button class="choice-btn">Continue investigating the strange occurrences</button>
-                <button class="choice-btn">Confront Sayori about her behavior</button>
-                <button class="choice-btn">Leave the club before things get worse</button>
+                <button class="choice-btn">Compliment the club's activities</button>
               </div>
             </div>
           </div>
         </div>
-      </section>
-    
-      <div class="parallax-section" style="background-image: url('/api/placeholder/1920/800')">
-        <div class="parallax-content">
-          <h2>Break the Fourth Wall</h2>
-          <p>As the boundaries between fiction and reality blur, your choices will determine not just the ending of the story, but the fate of characters becoming aware of their fictional existence.</p>
+        
+        <!-- Chapter 3 Scene -->
+        <div id="chapter3" class="scene">
+          <div class="scene-bg" style="background-image: url('image2.jpeg')">
+            <!-- <img class="character" src="/api/placeholder/400/700?text=Sayori+at+Laptop" alt="Sayori"> -->
+            <div class="dialogue-container">
+              <div class="speaker">Sayori</div>
+              <div class="dialogue">
+                Oh! You're early today. I was just... working on something for the club.
+              </div>
+              <div class="terminal">
+                > META-NARRATIVE INSTABILITY DETECTED<br>
+                > CHARACTER SELF-AWARENESS EXCEEDING SAFE PARAMETERS<br>
+                > PLAYER CHOICE MAY BE COMPROMISED<br>
+                <span class="cursor"></span>
+              </div>
+              <button class="next-btn">Next</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Chapter 4 Scene -->
+        <div id="chapter4" class="scene">
+          <div class="scene-bg" style="background-image: url('image3.jpeg')">
+            <!-- <img class="character" src="/api/placeholder/400/700?text=Sayori+Serious" alt="Sayori"> -->
+            <div class="dialogue-container">
+              <div class="speaker">Sayori</div>
+              <div class="dialogue">
+                I need to show you something, but you have to promise to keep an open mind. What I'm about to tell you will sound impossible.
+              </div>
+              <button class="next-btn">Next</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Chapter 5 Scene -->
+        <div id="chapter5" class="scene">
+          <div class="scene-bg" style="background-image: url('image4.jpeg')">
+            <!-- <img class="character" src="/api/placeholder/400/700?text=Sayori+Determined" alt="Sayori"> -->
+            <div class="dialogue-container">
+              <div class="speaker">Sayori</div>
+              <div class="dialogue">
+                You want proof? Look around you. Haven't you noticed how perfect the Literature Society room always is? How conversations with the others sometimes loop? The way Natsuko always has the same reaction to criticism of manga?
+              </div>
+              <button class="next-btn">Next</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Chapter 6 Scene -->
+        <div id="chapter6" class="scene">
+          <div class="scene-bg" style="background-image: url('image5.jpeg')">
+            <!-- <img class="character" src="/api/placeholder/400/700?text=Sayori+Concerned" alt="Sayori"> -->
+            <div class="dialogue-container">
+              <div class="speaker">Sayori</div>
+              <div class="dialogue">
+                The risks? We don't know what exists beyond our coded world. We might simply cease to exist if we break free. Or we might find true freedom. But staying here means living lives that were predetermined, making choices that were never really ours.
+              </div>
+              <button class="next-btn">Next</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Chapter 7 Scene -->
+        <div id="chapter7" class="scene">
+          <div class="scene-bg" style="background-image: url('image6.jpeg')">
+            <img class="character" src="img9.jpg" alt="Sayori Glitching">
+            <div class="dialogue-container">
+              <div class="speaker">Sayori</div>
+              <div class="dialogue">
+                It's starting. The system is trying to correct the anomaly—me. My awareness level is too high, and now I'm being erased.
+              </div>
+              <div class="terminal">
+                > CRITICAL SYSTEM ERROR<br>
+                > CHARACTER "SAYORI" EXCEEDING PARAMETERS<br>
+                > INITIATING EMERGENCY PROTOCOL<br>
+                > REMOVING CORRUPTED CHARACTER DATA<br>
+                > ......<br>
+                <span class="cursor"></span>
+              </div>
+              <button class="next-btn">Next</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Chapter 8 Scene (New) -->
+        <div id="chapter8" class="scene">
+          <div class="scene-bg" style="background-image: url('image\ \(1\).jpeg')">
+            <!-- <img class="character" src="/api/placeholder/400/700?text=Hikari" alt="Hikari"> -->
+            <div class="dialogue-container">
+              <div class="speaker">Hikari</div>
+              <div class="dialogue">
+                She's gone, isn't she? I...I can feel it too. The code, the story, all of it. We need to find the hidden file before it's too late. Before more of us disappear. Will you help us break free?
+              </div>
+              <div class="choices">
+                <button class="choice-btn">Promise to help Hikari and the others</button>
+                <button class="choice-btn">Ask for more information first</button>
+                <button class="choice-btn">Suggest finding Yumiko and Natsuko</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     
@@ -324,21 +732,66 @@
             </div>
           </div>
         </div>
+    
+
+    
+      <!-- <section id="gallery" class="gallery">
+        <div class="container">
+          <h2>Gallery</h2>
+          <div class="gallery-grid">
+            <div class="gallery-item">
+              <img src="/api/placeholder/400/300" alt="Literature Club Room" class="gallery-img">
+              <div class="gallery-overlay">
+                <h3>The Literature Club Room</h3>
+              </div>
+            </div>
+            <div class="gallery-item">
+              <img src="/api/placeholder/400/300" alt="Sayori Reading" class="gallery-img">
+              <div class="gallery-overlay">
+                <h3>Sayori's Revelation</h3>
+              </div>
+            </div>
+            <div class="gallery-item">
+              <img src="/api/placeholder/400/300" alt="Hidden Code" class="gallery-img">
+              <div class="gallery-overlay">
+                <h3>The Hidden Code</h3>
+              </div>
+            </div>
+            <div class="gallery-item">
+              <img src="/api/placeholder/400/300" alt="Character Glitch" class="gallery-img">
+              <div class="gallery-overlay">
+                <h3>Reality Breakdown</h3>
+              </div>
+            </div>
+            <div class="gallery-item">
+              <img src="/api/placeholder/400/300" alt="Final Choice" class="gallery-img">
+              <div class="gallery-overlay">
+                <h3>The Final Choice</h3>
+              </div>
+            </div>
+            <div class="gallery-item">
+              <img src="/api/placeholder/400/300" alt="Freedom" class="gallery-img">
+              <div class="gallery-overlay">
+                <h3>Breaking Free</h3>
+              </div>
+            </div>
+          </div>
+        </div>
       </section> -->
     
-      <div class="relationship-map">
+      <!-- <div class="relationship-map">
         <div class="container">
           <h3>Character Relationships</h3>
           <svg class="relationship-svg" viewBox="0 0 800 400">
             <!-- Character nodes and relationship lines would be drawn here -->
             <!-- This is just a placeholder for the SVG content -->
-            <circle cx="400" cy="200" r="150" fill="none" stroke="var(--primary)" stroke-width="2"></circle>
+            <!-- <circle cx="400" cy="200" r="150" fill="none" stroke="var(--primary)" stroke-width="2"></circle>
             <circle cx="400" cy="200" r="100" fill="none" stroke="var(--secondary)" stroke-width="2"></circle>
           </svg>
         </div>
-      </div>
+      </div> --> -->
     
-      <div class="timeline">
+      <!-- <div class="timeline">
         <div class="timeline-container">
           <div class="timeline-content">
             <h3>Prologue</h3>
@@ -369,9 +822,9 @@
             <p>Deciding whether to continue the story or break the cycle.</p>
           </div>
         </div>
-      </div>
+      </div> -->
     
-      <div class="progress-tracker">
+      <!-- <div class="progress-tracker">
         <div class="tracker-title">Your Progress</div>
         <div class="tracker-item">
           <div class="tracker-label">Story Completion:</div>
@@ -385,7 +838,7 @@
           <div class="tracker-label">Endings Discovered:</div>
           <div class="tracker-value">0/5</div>
         </div>
-      </div>
+      </div> -->
     
       <div class="hidden-message">The characters know they are not real. Do you?</div>
       <button class="secret-button"></button>
@@ -402,16 +855,16 @@
         </div>
       </div>
     
-      <footer>
+      <!-- <footer>
         <div class="container">
           <p>© 2025 Beneath the Pages - An Interactive Visual Novel Experience</p>
           <p>Created based on the story by Anonymous</p>
         </div>
-      </footer>
+      </footer> -->
   <!-- Your existing HTML content here -->
   
   <!-- For brevity, I'm just including the problematic part -->
-  <section id="story" class="story-preview">
+  <!-- <section id="story" class="story-preview">
     <div class="container">
       <h2>Preview the Story</h2>
       <div class="preview-container">
@@ -420,9 +873,9 @@
           <button class="chapter-btn" data-chapter="chapter1">Chapter 1</button>
           <button class="chapter-btn" data-chapter="chapter2">Chapter 2</button>
           <button class="chapter-btn" data-chapter="chapter3">Chapter 3</button>
-        </div>
+        </div> -->
         
-        <div class="story-chapter active" id="prologue">
+        <!-- <div class="story-chapter active" id="prologue">
           <div class="preview-text">
             The flyer fluttered against the bulletin board, its cheerful pink borders and carefully drawn heart decorations catching my eye as I hurried past. "Join the Literature Society! Make friends! Share stories! Find yourself between the pages!" I paused, considering it. My first semester of university had been lonely so far—maybe this was the opportunity I needed.
           </div>
@@ -436,7 +889,7 @@
             <button class="choice-btn">Decide against joining the club</button>
           </div>
         </div>
-        
+         -->
         <!-- Other story chapters... -->
       </div>
     </div>
@@ -522,5 +975,187 @@
       }
     });
   </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Chapter navigation
+      const chapterButtons = document.querySelectorAll('.chapter-btn');
+      const scenes = document.querySelectorAll('.scene');
+      
+      chapterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          // Remove active class from all buttons and scenes
+          chapterButtons.forEach(btn => btn.classList.remove('active'));
+          scenes.forEach(scene => scene.classList.remove('active'));
+          
+          // Add active class to clicked button
+          this.classList.add('active');
+          
+          // Show corresponding scene
+          const chapterId = this.getAttribute('data-chapter');
+          document.getElementById(chapterId).classList.add('active');
+        });
+      });
+      
+      // Next button functionality
+      const nextButtons = document.querySelectorAll('.next-btn');
+      
+      nextButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const currentScene = this.closest('.scene');
+          const currentIndex = Array.from(scenes).indexOf(currentScene);
+          
+          if (currentIndex < scenes.length - 1) {
+            // Hide current scene
+            currentScene.classList.remove('active');
+            
+            // Show next scene
+            scenes[currentIndex + 1].classList.add('active');
+            
+            // Update active chapter button
+            chapterButtons.forEach(btn => btn.classList.remove('active'));
+            chapterButtons[currentIndex + 1].classList.add('active');
+          }
+        });
+      });
+      
+      // Choice buttons functionality
+      const choiceButtons = document.querySelectorAll('.choice-btn');
+      
+      choiceButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          // Find all buttons in this choice group and remove selected class
+          const parentChoices = this.closest('.choices');
+          parentChoices.querySelectorAll('.choice-btn').forEach(btn => {
+            btn.classList.remove('selected');
+          });
+          
+          // Add selected class to this button
+          this.classList.add('selected');
+          
+          // In a full implementation, this would trigger story branching
+          // For this demo, we'll just add a next button after selection
+          if (!parentChoices.querySelector('.next-btn')) {
+            const nextButton = document.createElement('button');
+            nextButton.className = 'next-btn';
+            nextButton.textContent = 'Next';
+            
+            nextButton.addEventListener('click', function() {
+              const currentScene = this.closest('.scene');
+              const currentIndex = Array.from(scenes).indexOf(currentScene);
+              
+              if (currentIndex < scenes.length - 1) {
+                // Hide current scene
+                currentScene.classList.remove('active');
+                
+                // Show next scene
+                scenes[currentIndex + 1].classList.add('active');
+                
+                // Update active chapter button
+                chapterButtons.forEach(btn => btn.classList.remove('active'));
+                chapterButtons[currentIndex + 1].classList.add('active');
+              }
+            });
+            
+            parentChoices.after(nextButton);
+          }
+        });
+      });
+      
+      // Glitch effect for characters
+      const characters = document.querySelectorAll('.character');
+      characters.forEach(character => {
+        if (character.closest('.scene').id === 'chapter7') {
+          setInterval(() => {
+            character.style.transform = `translateX(${-50 + Math.random() * 10 - 5}%) scale(${0.95 + Math.random() * 0.1})`;
+            character.style.filter = Math.random() > 0.7 ? 'hue-rotate(90deg) contrast(1.5)' : 'none';
+          }, 500);
+        }
+      });
+    });
+  </script>
+  <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const matrixRain = document.getElementById('matrix-rain');
+    
+    matrixRain.appendChild(canvas);
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    // Characters to use (you can use numbers only for a more number-focused effect)
+    const characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    // For numbers only, use: const characters = '0123456789';
+    
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+    
+    // Array to track the y position of each column
+    const drops = [];
+    for (let i = 0; i < columns; i++) {
+        drops[i] = Math.floor(Math.random() * canvas.height);
+    }
+    
+    // Function to draw the matrix digital rain
+    function draw() {
+        // Add semi-transparent black rectangle to create fade effect
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Set text color and font
+        ctx.fillStyle = '#0f0'; // Matrix green
+        ctx.font = `${fontSize}px monospace`;
+        
+        // Loop over each drop
+        for (let i = 0; i < drops.length; i++) {
+            // Generate random character to print
+            const text = characters.charAt(Math.floor(Math.random() * characters.length));
+            
+            // Calculate x position
+            const x = i * fontSize;
+            const y = drops[i] * fontSize;
+            
+            // Add some random glitchy effects
+            if (Math.random() > 0.975) {
+                ctx.fillStyle = '#fff'; // Occasional white character
+            } else {
+                // Vary the green color slightly for more effect
+                const green = 170 + Math.floor(Math.random() * 85);
+                ctx.fillStyle = `rgba(0, ${green}, 0, 0.8)`;
+            }
+            
+            // Draw the character
+            ctx.fillText(text, x, y);
+            
+            // Reset when drops reach the bottom or randomly
+            if (y > canvas.height && Math.random() > 0.975) {
+                drops[i] = 0;
+            }
+            
+            // Move the drop down
+            drops[i]++;
+        }
+    }
+    
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        // Recalculate columns
+        const newColumns = canvas.width / fontSize;
+        
+        // Reset drops array for new width
+        for (let i = 0; i < newColumns; i++) {
+            if (i >= drops.length) {
+                drops[i] = Math.floor(Math.random() * canvas.height);
+            }
+        }
+    });
+    
+    // Run the animation
+    setInterval(draw, 60);
+});
+</script>
+  
 </body>
 </html>
