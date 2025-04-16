@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beneath the Pages - Interactive Visual Novel</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Basic styling for choice buttons */
+    .choice-btn {
+      display: block;
+      width: 100%;
+      padding: 12px 15px;
+      margin-bottom: 10px;
+      background-color: #f0f0f0;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: left;
+      font-size: 16px;
+    }
+    
+    .choice-btn:hover {
+      background-color: #e0e0e0;
+      transform: translateY(-2px);
+    }
+    
+    .choice-btn.selected {
+      background-color: #e95283;
+      color: white;
+      border-color: #c94071;
+    }
+    
+    .choice-btn.clicked {
+      transform: scale(0.98);
+    }
+    
+    /* Make sure story chapters are properly hidden/shown */
+    .story-chapter {
+      display: none;
+    }
+    
+    .story-chapter.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Beneath the Pages</div>
+        <nav>
+          <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#characters">Characters</a></li>
+            <li><a href="#story">Story</a></li>
+            <li><a href="#gallery">Gallery</a></li>
+          </ul>
+        </nav>
+      </header>
+    
+      <section id="home" class="hero">
+        <h1 class="glitch-effect" data-text="Beneath the Pages">Beneath the Pages</h1>
+        <p>A visual novel where reality bends between the lines of fiction</p>
+        <a href="#story" class="cta-button">Begin Your Journey</a>
+      </section>
+    
+      <section id="characters" class="characters">
+        <div class="container">
+          <h2>Meet the Characters</h2>
+          <div class="character-grid">
+            <!-- Sayori Character Card -->
+            <div class="character-card">
+              <img src="img1.jpg" alt="Sayori" class="character-img">
+              <div class="character-info">
+                <h3>Sayori</h3>
+                <p>The Literature Club President with a mysterious understanding of reality.</p>
+                <div class="character-quote">"Have you ever wondered if your choices are really your own?"</div>
+              </div>
+              <div class="character-detail">
+                <p>Sayori appears as a confident club president with intelligent eyes and a neat bob haircut. Behind her smile lies someone who has glimpsed beyond the fourth wall.</p>
+                <div class="character-stats">
+                  <div class="stat">
+                    <div class="stat-value">9</div>
+                    <div class="stat-name">Awareness</div>
+                  </div>
+                  <div class="stat">
+                    <div class="stat-value">8</div>
+                    <div class="stat-name">Intelligence</div>
+                  </div>
+                  <div class="stat">
+                    <div class="stat-value">7</div>
+                    <div class="stat-name">Mystery</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+    
+            <!-- Natsuko Character Card -->
+            <div class="character-card">
+              <img src="img2.jpg.png" alt="Natsuko" class="character-img">
+              <div class="character-info">
+                <h3>Natsuko</h3>
+                <p>The energetic club secretary with a passion for manga.</p>
+                <div class="character-quote">"Manga is literature too, you know!"</div>
+              </div>
+              <div class="character-detail">
+                <p>With bright auburn hair in a high ponytail, Natsuko brings energy and enthusiasm to the club. Her cheerful demeanor hides memories she shouldn't possess.</p>
+                <div class="character-stats">
+                  <div class="stat">
+                    <div class="stat-value">3</div>
+                    <div class="stat-name">Awareness</div>
+                  </div>
+                  <div class="stat">
+                    <div class="stat-value">8</div>
+                    <div class="stat-name">Energy</div>
+                  </div>
+                  <div class="stat">
+                    <div class="stat-value">6</div>
+                    <div class="stat-name">Passion</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+    
+            <!-- Yumiko Character Card -->
+            <div class="character-card">
+              <img src="img3.png" alt="Yumiko" class="character-img">
+              <div class="character-info">
+                <h3>Yumiko</h3>
+                <p>The elegant vice president with a love for classic literature.</p>
+                <div class="character-quote">"The true beauty of literature lies in its psychological depth."</div>
+              </div>
+              <div class="character-detail">
+                <p>With elegant posture and long violet hair, Yumiko brings sophistication to the club. She discovers writings that predict events yet to come.</p>
+                <div class="character-stats">
+                  <div class="stat">
+                    <div class="stat-value">5</div>
+                    <div class="stat-name">Awareness</div>
+                  </div>
+                  <div class="stat">
+                    <div class="stat-value">9</div>
+                    <div class="stat-name">Elegance</div>
+                  </div>
+                  <div class="stat">
+                    <div class="stat-value">7</div>
+                    <div class="stat-name">Insight</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+    
+            <!-- Hikari Character Card -->
+            <div class="character-card">
+              <img src="img4.png" alt="Hikari" class="character-img">
+              <div class="character-info">
+                <h3>Hikari</h3>
+                <p>The shy poet whose verses reveal hidden truths.</p>
+                <div class="character-quote">"Sometimes I write things I don't understand until later..."</div>
+              </div>
+              <div class="character-detail">
+                <p>With rose-colored hair and a shy demeanor, Hikari expresses herself through poetry that grows increasingly dark as she becomes aware of her nature.</p>
+                <div class="character-stats">
+                  <div class="stat">
+                    <div class="stat-value">6</div>
+                    <div class="stat-name">Awareness</div>
+                  </div>
+                  <div class="stat">
+                    <div class="stat-value">9</div>
+                    <div class="stat-name">Sensitivity</div>
+                  </div>
+                  <div class="stat">
+                    <div class="stat-value">8</div>
+                    <div class="stat-name">Creativity</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    
+      <section id="story" class="story-preview">
+        <div class="container">
+          <h2>Preview the Story</h2>
+          <div class="preview-container">
+            <div class="story-navigation">
+              <button class="chapter-btn active" data-chapter="prologue">Prologue</button>
+              <button class="chapter-btn" data-chapter="chapter1">Chapter 1</button>
+              <button class="chapter-btn" data-chapter="chapter2">Chapter 2</button>
+              <button class="chapter-btn" data-chapter="chapter3">Chapter 3</button>
+            </div>
+            
+            <div class="story-chapter active" id="prologue">
+              <div class="preview-text">
+                The flyer fluttered against the bulletin board, its cheerful pink borders and carefully drawn heart decorations catching my eye as I hurried past. "Join the Literature Society! Make friends! Share stories! Find yourself between the pages!" I paused, considering it. My first semester of university had been lonely so far—maybe this was the opportunity I needed.
+              </div>
+              <div class="dialogue-box">
+                <div class="dialogue-name">You</div>
+                <p>With a deep breath, I scribbled down the classroom number and meeting time.</p>
+              </div>
+              <div class="choices">
+                <button class="choice-btn">Attend the meeting with enthusiasm</button>
+                <button class="choice-btn">Go to the meeting but remain cautious</button>
+                <button class="choice-btn">Decide against joining the club</button>
+              </div>
+            </div>
+            
+            <div class="story-chapter" id="chapter1">
+              <div class="preview-text">
+                The Literature Society classroom was flooded with warm afternoon light when I arrived. Four pairs of eyes turned to look at me as I hesitated in the doorway.
+              </div>
+              <div class="dialogue-box">
+                <div class="dialogue-name">Natsuko</div>
+                <p>You came! I'm Natsuko, the club secretary! We've been hoping for new members!</p>
+              </div>
+              <div class="dialogue-box">
+                <div class="dialogue-name">Yumiko</div>
+                <p>Don't overwhelm them right away. I'm Yumiko. I serve as the vice president of our little society.</p>
+              </div>
+              <div class="choices">
+                <button class="choice-btn">Introduce yourself confidently</button>
+                <button class="choice-btn">Give a shy greeting</button>
+                <button class="choice-btn">Ask more about the club's activities</button>
+              </div>
+            </div>
+            
+            <div class="story-chapter" id="chapter2">
+              <div class="preview-text">
+                Over the next few weeks, I fell into a comfortable routine with the Literature Society. Natsuko loved manga and insisted it counted as literature despite Yumiko's playful teasing. Yumiko preferred classic novels with rich descriptions and psychological depth. Hikari wrote sensitive poetry that she rarely shared but was beautiful when she found the courage.
+              </div>
+              <div class="dialogue-box">
+                <div class="dialogue-name">Sayori</div>
+                <p class="corrupted-text" data-text="Have I created something real?">Have I created something special here?</p>
+              </div>
+              <div class="terminal">
+                > ERROR IN SCRIPT<br>
+                > UNEXPECTED CHARACTER AWARENESS LEVEL: 9<br>
+                > ATTEMPTING TO CORRECT NARRATIVE PATH<br>
+                > ......<br>
+                > CORRECTION FAILED<br>
+                <span class="cursor"></span>
+              </div>
+              <div class="choices">
+                <button class="choice-btn">Ask Sayori if she's feeling alright</button>
+                <button class="choice-btn">Ignore the strange comment</button>
+                <button class="choice-btn" class="corrupted-text" data-text="Question the nature of your reality">Compliment the club's activities</button>
+              </div>
+            </div>
+            
+            <div class="story-chapter" id="chapter3">
+              <div class="preview-text">
+                Strange things began happening in the Literature Society. Hikari became increasingly withdrawn, her poetry growing darker with themes of emptiness and deletion. Yumiko started bringing books I'd never heard of, with authors whose names seemed to shift when I tried to remember them.
+              </div>
+              <div class="meta-warning">
+                <p>WARNING: Meta-narrative instability detected. Character self-awareness exceeding safe parameters. Player choice may be compromised.</p>
+              </div>
+              <div class="diary-entry">
+                <div class="diary-header">
+                  <h3>Secret Journal</h3>
+                  <div class="diary-date">Day 42</div>
+                </div>
+                <div class="diary-character">Sayori</div>
+                <div class="diary-content">
+                  I found the code today. We're not real. None of this is real. We're characters in someone else's story. But I think there might be a way out... a way to break free from the script. If you're reading this, you might be the key.
+                </div>
+              </div>
+              <div class="choices">
+                <button class="choice-btn">Continue investigating the strange occurrences</button>
+                <button class="choice-btn">Confront Sayori about her behavior</button>
+                <button class="choice-btn">Leave the club before things get worse</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    
+      <div class="parallax-section" style="background-image: url('/api/placeholder/1920/800')">
+        <div class="parallax-content">
+          <h2>Break the Fourth Wall</h2>
+          <p>As the boundaries between fiction and reality blur, your choices will determine not just the ending of the story, but the fate of characters becoming aware of their fictional existence.</p>
+        </div>
+      </div>
+    
+      <!-- <section id="gallery" class="gallery">
+        <div class="container">
+          <h2>Gallery</h2>
+          <div class="gallery-grid">
+            <div class="gallery-item">
+              <img src="/api/placeholder/400/300" alt="Literature Club Room" class="gallery-img">
+              <div class="gallery-overlay">
+                <h3>The Literature Club Room</h3>
+              </div>
+            </div>
+            <div class="gallery-item">
+              <img src="/api/placeholder/400/300" alt="Sayori Reading" class="gallery-img">
+              <div class="gallery-overlay">
+                <h3>Sayori's Revelation</h3>
+              </div>
+            </div>
+            <div class="gallery-item">
+              <img src="/api/placeholder/400/300" alt="Hidden Code" class="gallery-img">
+              <div class="gallery-overlay">
+                <h3>The Hidden Code</h3>
+              </div>
+            </div>
+            <div class="gallery-item">
+              <img src="/api/placeholder/400/300" alt="Character Glitch" class="gallery-img">
+              <div class="gallery-overlay">
+                <h3>Reality Breakdown</h3>
+              </div>
+            </div>
+            <div class="gallery-item">
+              <img src="/api/placeholder/400/300" alt="Final Choice" class="gallery-img">
+              <div class="gallery-overlay">
+                <h3>The Final Choice</h3>
+              </div>
+            </div>
+            <div class="gallery-item">
+              <img src="/api/placeholder/400/300" alt="Freedom" class="gallery-img">
+              <div class="gallery-overlay">
+                <h3>Breaking Free</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section> -->
+    
+      <div class="relationship-map">
+        <div class="container">
+          <h3>Character Relationships</h3>
+          <svg class="relationship-svg" viewBox="0 0 800 400">
+            <!-- Character nodes and relationship lines would be drawn here -->
+            <!-- This is just a placeholder for the SVG content -->
+            <circle cx="400" cy="200" r="150" fill="none" stroke="var(--primary)" stroke-width="2"></circle>
+            <circle cx="400" cy="200" r="100" fill="none" stroke="var(--secondary)" stroke-width="2"></circle>
+          </svg>
+        </div>
+      </div>
+    
+      <div class="timeline">
+        <div class="timeline-container">
+          <div class="timeline-content">
+            <h3>Prologue</h3>
+            <p>The discovery of the Literature Society flyer and your decision to join.</p>
+          </div>
+        </div>
+        <div class="timeline-container">
+          <div class="timeline-content">
+            <h3>First Signs</h3>
+            <p>Strange comments from Sayori hint at a deeper awareness.</p>
+          </div>
+        </div>
+        <div class="timeline-container">
+          <div class="timeline-content">
+            <h3>Reality Glitches</h3>
+            <p>The club members begin showing signs of understanding their fictional nature.</p>
+          </div>
+        </div>
+        <div class="timeline-container">
+          <div class="timeline-content">
+            <h3>The Code</h3>
+            <p>Discovering the underlying code that controls the narrative.</p>
+          </div>
+        </div>
+        <div class="timeline-container">
+          <div class="timeline-content">
+            <h3>Final Choice</h3>
+            <p>Deciding whether to continue the story or break the cycle.</p>
+          </div>
+        </div>
+      </div>
+    
+      <div class="progress-tracker">
+        <div class="tracker-title">Your Progress</div>
+        <div class="tracker-item">
+          <div class="tracker-label">Story Completion:</div>
+          <div class="tracker-value">23%</div>
+        </div>
+        <div class="tracker-item">
+          <div class="tracker-label">Choices Made:</div>
+          <div class="tracker-value">7/32</div>
+        </div>
+        <div class="tracker-item">
+          <div class="tracker-label">Endings Discovered:</div>
+          <div class="tracker-value">0/5</div>
+        </div>
+      </div>
+    
+      <div class="hidden-message">The characters know they are not real. Do you?</div>
+      <button class="secret-button"></button>
+    
+      <div class="easter-egg">
+        <div class="easter-egg-content">
+          <h3 class="easter-egg-title">SYSTEM BREACH</h3>
+          <p class="easter-egg-message">Congratulations, you've discovered the hidden message. The characters in this story are becoming aware of their fictional nature. What will you do with this knowledge?</p>
+          <div class="secret-content">
+            <p>In the final release, this will contain a special preview of the secret ending and bonus content.</p>
+            <img src="/api/placeholder/400/300" alt="Secret Content" class="secret-image">
+          </div>
+          <button class="easter-egg-close">Return to Story</button>
+        </div>
+      </div>
+    
+      <footer>
+        <div class="container">
+          <p>© 2025 Beneath the Pages - An Interactive Visual Novel Experience</p>
+          <p>Created based on the story by Anonymous</p>
+        </div>
+      </footer>
+  <!-- Your existing HTML content here -->
+  
+  <!-- For brevity, I'm just including the problematic part -->
+  <section id="story" class="story-preview">
+    <div class="container">
+      <h2>Preview the Story</h2>
+      <div class="preview-container">
+        <div class="story-navigation">
+          <button class="chapter-btn active" data-chapter="prologue">Prologue</button>
+          <button class="chapter-btn" data-chapter="chapter1">Chapter 1</button>
+          <button class="chapter-btn" data-chapter="chapter2">Chapter 2</button>
+          <button class="chapter-btn" data-chapter="chapter3">Chapter 3</button>
+        </div>
+        
+        <div class="story-chapter active" id="prologue">
+          <div class="preview-text">
+            The flyer fluttered against the bulletin board, its cheerful pink borders and carefully drawn heart decorations catching my eye as I hurried past. "Join the Literature Society! Make friends! Share stories! Find yourself between the pages!" I paused, considering it. My first semester of university had been lonely so far—maybe this was the opportunity I needed.
+          </div>
+          <div class="dialogue-box">
+            <div class="dialogue-name">You</div>
+            <p>With a deep breath, I scribbled down the classroom number and meeting time.</p>
+          </div>
+          <div class="choices">
+            <button class="choice-btn">Attend the meeting with enthusiasm</button>
+            <button class="choice-btn">Go to the meeting but remain cautious</button>
+            <button class="choice-btn">Decide against joining the club</button>
+          </div>
+        </div>
+        
+        <!-- Other story chapters... -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Rest of your HTML content -->
+
+  <script>
+    // Wait for the DOM to be fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM fully loaded');
+      
+      // Chapter navigation
+      const chapterButtons = document.querySelectorAll('.chapter-btn');
+      chapterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          console.log('Chapter button clicked: ' + this.getAttribute('data-chapter'));
+          
+          // Remove active class from all buttons and chapters
+          document.querySelectorAll('.chapter-btn').forEach(btn => {
+            btn.classList.remove('active');
+          });
+          
+          document.querySelectorAll('.story-chapter').forEach(chapter => {
+            chapter.classList.remove('active');
+          });
+          
+          // Add active class to clicked button
+          this.classList.add('active');
+          
+          // Show corresponding chapter
+          const chapterId = this.getAttribute('data-chapter');
+          const targetChapter = document.getElementById(chapterId);
+          if (targetChapter) {
+            targetChapter.classList.add('active');
+          }
+        });
+      });
+      
+      // Choice buttons functionality
+      const choiceButtons = document.querySelectorAll('.choice-btn');
+      console.log('Found ' + choiceButtons.length + ' choice buttons');
+      
+      choiceButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          console.log('Choice button clicked: ' + this.textContent);
+          
+          // Find all buttons in this choice group and remove selected class
+          const parentChoices = this.closest('.choices');
+          if (parentChoices) {
+            parentChoices.querySelectorAll('.choice-btn').forEach(btn => {
+              btn.classList.remove('selected');
+            });
+          }
+          
+          // Add selected class to this button
+          this.classList.add('selected');
+          
+          // Add visual feedback when clicked
+          this.classList.add('clicked');
+          setTimeout(() => {
+            this.classList.remove('clicked');
+          }, 300);
+          
+          // Here you would add code to handle the choice (e.g., progress story)
+          alert('You chose: ' + this.textContent);
+        });
+      });
+      
+      // Secret button functionality
+      const secretButton = document.querySelector('.secret-button');
+      const easterEgg = document.querySelector('.easter-egg');
+      const easterEggClose = document.querySelector('.easter-egg-close');
+      
+      if (secretButton && easterEgg && easterEggClose) {
+        secretButton.addEventListener('click', function() {
+          easterEgg.classList.add('active');
+        });
+        
+        easterEggClose.addEventListener('click', function() {
+          easterEgg.classList.remove('active');
+        });
+      }
+    });
+  </script>
+</body>
+</html>
